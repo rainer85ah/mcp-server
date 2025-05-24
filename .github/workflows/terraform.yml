@@ -1,9 +1,9 @@
 name: Terraform Plan & Apply
 
-on:
-  push:
-    paths:
-      - "infra/**"
+#on:
+#  push:
+#    paths:
+#      - "infra/**"
 
 jobs:
   terraform:

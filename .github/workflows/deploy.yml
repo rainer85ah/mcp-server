@@ -1,8 +1,8 @@
 name: Deploy to Environment
 
-on:
-  push:
-    branches: [develop, staging, uat, main]
+#on:
+#  push:
+#    branches: [develop, staging, uat, main]
 
 jobs:
   deploy:

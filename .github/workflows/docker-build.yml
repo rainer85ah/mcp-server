@@ -1,8 +1,8 @@
 name: Docker Build
 
-on:
-  push:
-    branches: [main, dev, stag, uat]
+#on:
+#  push:
+#    branches: [main, dev, stag, uat]
 
 jobs:
   build-push:
