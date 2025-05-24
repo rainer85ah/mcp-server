@@ -1,0 +1,61 @@
+services:
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ${HOME}/ollama:/root/.ollama
+    networks:
+      - ai-net
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  openweb:
+    image: ghcr.io/open-webui/open-webui:v0.6.10
+    container_name: openweb
+    depends_on:
+      - ollama
+      - mcp
+    ports:
+      - "3000:8080"
+    volumes:
+      - ${HOME}/openweb:/app/backend/data
+    environment:
+      - OLLAMA_BASE_URL=${OLLAMA_BASE_URL}
+      - WEBUI_SECRET_KEY=${WEBUI_SECRET_KEY}
+    networks:
+      - ai-net
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  mcp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mcp
+    depends_on:
+      - ollama
+    ports:
+      - "8000:8000"
+    environment:
+      - OLLAMA_BASE_URL=${OLLAMA_BASE_URL}
+      - DEFAULT_MODEL=${DEFAULT_MODEL}
+    networks:
+      - ai-net
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  ai-net:
+    driver: bridge
