@@ -1,39 +1,71 @@
-name: MCP Server CI/CD pipeline.
+name: Deploy to Environment
 
 on:
   push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-
-env:
-  IMAGE_NAME: rainer85ah/mcp-img
-  TAG: latest
+    branches: [develop, staging, uat, main]
 
 jobs:
-  build-and-deploy:
+  deploy:
+    name: Deploy to ${{ matrix.env }} environment
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        include:
+          - branch: develop
+            env: dev
+            cluster: mcp-dev-cluster
+            role: AWS_DEV_ROLE_ARN
+            tfvars: env/dev/terraform.tfvars
+            backend: env/dev/backend.tfvars
+
+          - branch: staging
+            env: stag
+            cluster: mcp-stag-cluster
+            role: AWS_STAG_ROLE_ARN
+            tfvars: env/stag/terraform.tfvars
+            backend: env/stag/backend.tfvars
+
+          - branch: uat
+            env: uat
+            cluster: mcp-uat-cluster
+            role: AWS_UAT_ROLE_ARN
+            tfvars: env/uat/terraform.tfvars
+            backend: env/uat/backend.tfvars
+
+          - branch: main
+            env: prod
+            cluster: mcp-prod-cluster
+            role: AWS_PROD_ROLE_ARN
+            tfvars: env/prod/terraform.tfvars
+            backend: env/prod/backend.tfvars
+
+    if: github.ref == 'refs/heads/' + matrix.branch
+    environment: ${{ matrix.env }}
+
     steps:
-      - name: 📥 Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: 🐳 Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: 🔐 Log in to GitHub Container Registry
-        uses: docker/login-action@v3
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          role-to-assume: ${{ secrets[matrix.role] }}
+          aws-region: us-east-1
 
-      - name: 🔨 Build MCP image
-        run: |
-          docker build -t ghcr.io/${{ github.repository }}:${{ env.TAG }} -f Dockerfile .
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
 
-      - name: 📤 Push image to GHCR
+      - name: Terraform Init & Apply
+        working-directory: ./infra
         run: |
-          docker push ghcr.io/${{ github.repository }}:${{ env.TAG }}
+          terraform init -backend-config="${{ matrix.backend }}"
+          terraform workspace select ${{ matrix.env }} || terraform workspace new ${{ matrix.env }}
+          terraform apply -var-file="${{ matrix.tfvars }}" -auto-approve
+
+      - name: Deploy to ECS
+        run: |
+          aws ecs update-service \
+            --cluster ${{ matrix.cluster }} \
+            --service mcp-service \
+            --force-new-deployment
