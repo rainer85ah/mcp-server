@@ -6,7 +6,9 @@ dist/
 wheels/
 *.egg-info
 
+
 # Virtual environments
+.idea
 .venv
 
 # Secrets and passwords
