@@ -62,12 +62,14 @@ async def ask_question_tool(question: str, model: str = DEFAULT_MODEL) -> str:
 # === Tool: Classification ===
 @general_mcp.tool()
 async def classify_tool(text: str, model: str = DEFAULT_MODEL) -> str:
-    return await call_ollama(f"Classify the following text into a category:\n{text}", model).__anext__()
+    result = await call_ollama(f"Classify the following text into a category:\n{text}", model).__anext__()
+    return result or "⚠️ No answer returned from model."
 
 # === Tool: Sentiment Analysis ===
 @general_mcp.tool()
 async def sentiment_tool(text: str, model: str = DEFAULT_MODEL) -> str:
-    return await call_ollama(f"What is the sentiment of this text?\n{text}", model).__anext__()
+    result = await call_ollama(f"What is the sentiment of this text?\n{text}", model).__anext__()
+    return result or "⚠️ No answer returned from model."
 
 # === Tool: Text Completion ===
 @general_mcp.tool()
@@ -75,7 +77,7 @@ async def complete_text_tool(text: str, model: str = DEFAULT_MODEL) -> str:
     chunks = []
     async for chunk in call_ollama(f"Continue the following:\n{text}", model):
         chunks.append(chunk)
-    return "".join(chunks).strip()
+    return "".join(chunks).strip() or "⚠️ No answer returned from model."
 
 # === Tool: Text Generation ===
 @general_mcp.tool()
@@ -83,7 +85,7 @@ async def generate_text_tool(topic: str, model: str = DEFAULT_MODEL) -> str:
     chunks = []
     async for chunk in call_ollama(f"Write a paragraph about:\n{topic}", model):
         chunks.append(chunk)
-    return "".join(chunks).strip()
+    return "".join(chunks).strip() or "⚠️ No answer returned from model."
 
 # === Tool: Code Generation ===
 @general_mcp.tool()
@@ -91,7 +93,7 @@ async def generate_code_tool(task: str, model: str = DEFAULT_MODEL) -> str:
     chunks = []
     async for chunk in call_ollama(f"Write Python code for this task:\n{task}", model):
         chunks.append(chunk)
-    return "".join(chunks).strip()
+    return "".join(chunks).strip() or "⚠️ No answer returned from model."
 
 # === Tool: Summarization ===
 @general_mcp.tool()
@@ -99,7 +101,7 @@ async def summarize_tool(text: str, model: str = DEFAULT_MODEL) -> str:
     chunks = []
     async for chunk in call_ollama(f"Summarize the following text:\n{text}", model):
         chunks.append(chunk)
-    return "".join(chunks).strip()
+    return "".join(chunks).strip() or "⚠️ No answer returned from model."
 
 # === Tool: Translation ===
 @general_mcp.tool()
@@ -107,7 +109,7 @@ async def translate_tool(text: str, language: str = "Spanish", model: str = DEFA
     chunks = []
     async for chunk in call_ollama(f"Translate this to {language}:\n{text}", model):
         chunks.append(chunk)
-    return "".join(chunks).strip()
+    return "".join(chunks).strip() or "⚠️ No answer returned from model."
 
 # === Tool: Paraphrasing ===
 @general_mcp.tool()
@@ -115,7 +117,7 @@ async def paraphrase_tool(text: str, model: str = DEFAULT_MODEL) -> str:
     chunks = []
     async for chunk in call_ollama(f"Paraphrase this to sound more formal:\n{text}", model):
         chunks.append(chunk)
-    return "".join(chunks).strip()
+    return "".join(chunks).strip() or "⚠️ No answer returned from model."
 
 # === Tool: Instruction Following ===
 @general_mcp.tool()
@@ -123,4 +125,4 @@ async def instruction_tool(task: str, model: str = DEFAULT_MODEL) -> str:
     chunks = []
     async for chunk in call_ollama(f"Give step-by-step instructions to:\n{task}", model):
         chunks.append(chunk)
-    return "".join(chunks).strip()
+    return "".join(chunks).strip() or "⚠️ No answer returned from model."
