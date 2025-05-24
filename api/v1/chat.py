@@ -1,16 +1,12 @@
-from typing import Optional
-from fastapi import APIRouter, HTTPException, Query
-from pydantic import BaseModel
 import logging
 from tools.chat import *
+from typing import Optional
+from models.types import ChatResponse
+from fastapi import APIRouter, HTTPException, Query
 
 
 router = APIRouter(prefix="/chat", tags=["Chat endpoints"])
 logger = logging.getLogger(__name__)
-
-
-class ChatResponse(BaseModel):
-    result: str
 
 
 def safe_call(fn):

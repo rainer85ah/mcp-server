@@ -1,14 +1,18 @@
+from typing import Optional
 from pydantic import BaseModel
 
 
-class Item(BaseModel):
-    name: str
-    price: float
+class ChatResponse(BaseModel):
+    result: str
 
-    class Config:
-        json_schema_extra = {
-            "example": {
-                "name": "John",
-                "price": 40
-            }
-        }
+
+class CodePrompt(BaseModel):
+    prompt: str
+    language: Optional[str] = "python"
+    model: Optional[str] = None
+
+
+class CodeInput(BaseModel):
+    code: str
+    language: Optional[str] = "python"
+    model: Optional[str] = None

@@ -2,7 +2,7 @@ import json
 import httpx
 import logging
 from os import getenv
-from agents.chat import general_mcp
+from agents.chat import chat_mcp
 
 
 logger = logging.getLogger(__name__)
@@ -52,77 +52,77 @@ async def call_ollama(prompt: str, model: str):
         yield f"💥 Unexpected error: {str(e)}"
 
 # === Tool: General QA ===
-@general_mcp.tool()
+@chat_mcp.tool()
 async def ask_question_tool(question: str, model: str = DEFAULT_MODEL) -> str:
     chunks = []
     async for chunk in call_ollama(prompt=f"Respond to the following question: {question}", model=model):
         chunks.append(chunk)
-    return "".join(chunks).strip() or "⚠️ No answer returned from model."
+    return "".join(chunks).strip()
 
 # === Tool: Classification ===
-@general_mcp.tool()
+@chat_mcp.tool()
 async def classify_tool(text: str, model: str = DEFAULT_MODEL) -> str:
     result = await call_ollama(f"Classify the following text into a category:\n{text}", model).__anext__()
-    return result or "⚠️ No answer returned from model."
+    return result
 
 # === Tool: Sentiment Analysis ===
-@general_mcp.tool()
+@chat_mcp.tool()
 async def sentiment_tool(text: str, model: str = DEFAULT_MODEL) -> str:
     result = await call_ollama(f"What is the sentiment of this text?\n{text}", model).__anext__()
-    return result or "⚠️ No answer returned from model."
+    return result
 
 # === Tool: Text Completion ===
-@general_mcp.tool()
+@chat_mcp.tool()
 async def complete_text_tool(text: str, model: str = DEFAULT_MODEL) -> str:
     chunks = []
     async for chunk in call_ollama(f"Continue the following:\n{text}", model):
         chunks.append(chunk)
-    return "".join(chunks).strip() or "⚠️ No answer returned from model."
+    return "".join(chunks).strip()
 
 # === Tool: Text Generation ===
-@general_mcp.tool()
+@chat_mcp.tool()
 async def generate_text_tool(topic: str, model: str = DEFAULT_MODEL) -> str:
     chunks = []
     async for chunk in call_ollama(f"Write a paragraph about:\n{topic}", model):
         chunks.append(chunk)
-    return "".join(chunks).strip() or "⚠️ No answer returned from model."
+    return "".join(chunks).strip()
 
 # === Tool: Code Generation ===
-@general_mcp.tool()
+@chat_mcp.tool()
 async def generate_code_tool(task: str, model: str = DEFAULT_MODEL) -> str:
     chunks = []
     async for chunk in call_ollama(f"Write Python code for this task:\n{task}", model):
         chunks.append(chunk)
-    return "".join(chunks).strip() or "⚠️ No answer returned from model."
+    return "".join(chunks).strip()
 
 # === Tool: Summarization ===
-@general_mcp.tool()
+@chat_mcp.tool()
 async def summarize_tool(text: str, model: str = DEFAULT_MODEL) -> str:
     chunks = []
     async for chunk in call_ollama(f"Summarize the following text:\n{text}", model):
         chunks.append(chunk)
-    return "".join(chunks).strip() or "⚠️ No answer returned from model."
+    return "".join(chunks).strip()
 
 # === Tool: Translation ===
-@general_mcp.tool()
+@chat_mcp.tool()
 async def translate_tool(text: str, language: str = "Spanish", model: str = DEFAULT_MODEL) -> str:
     chunks = []
     async for chunk in call_ollama(f"Translate this to {language}:\n{text}", model):
         chunks.append(chunk)
-    return "".join(chunks).strip() or "⚠️ No answer returned from model."
+    return "".join(chunks).strip()
 
 # === Tool: Paraphrasing ===
-@general_mcp.tool()
+@chat_mcp.tool()
 async def paraphrase_tool(text: str, model: str = DEFAULT_MODEL) -> str:
     chunks = []
     async for chunk in call_ollama(f"Paraphrase this to sound more formal:\n{text}", model):
         chunks.append(chunk)
-    return "".join(chunks).strip() or "⚠️ No answer returned from model."
+    return "".join(chunks).strip()
 
 # === Tool: Instruction Following ===
-@general_mcp.tool()
+@chat_mcp.tool()
 async def instruction_tool(task: str, model: str = DEFAULT_MODEL) -> str:
     chunks = []
     async for chunk in call_ollama(f"Give step-by-step instructions to:\n{task}", model):
         chunks.append(chunk)
-    return "".join(chunks).strip() or "⚠️ No answer returned from model."
+    return "".join(chunks).strip()
