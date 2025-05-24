@@ -1,7 +1,7 @@
 import pytest
 import pytest_asyncio
 from fastmcp.client import Client
-from agents.general import general_mcp
+from agents.chat import general_mcp
 from main import logger
 
 pytestmark = pytest.mark.asyncio

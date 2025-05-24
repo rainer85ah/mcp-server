@@ -5,8 +5,8 @@ from typing import Literal, cast
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastmcp import FastMCP
-from agents.general import dynamic_mcp
-from api.v1.general import router
+from agents.chat import dynamic_mcp
+from api.v1.chat import router
 from context.context import AppContext
 
 

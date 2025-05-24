@@ -1,15 +1,17 @@
 import asyncio
 import logging
 from fastmcp import FastMCP
-from tools.general import *
+from agents.chat import chat_mcp
+from tools.chat import *
+
 
 logger = logging.getLogger("MainAgent")
-mcp = FastMCP(name="MainAgent")
-mcp.dependencies = []
+mcp = FastMCP(name="MainAgent", dependencies=[])
+
 
 async def main():
     logger.info(f"Mounting Sub-Agents ...")
-    mcp.mount(prefix='general', server=general_mcp)
+    mcp.mount(prefix='chat', server=chat_mcp)
 
     logger.info(f"Starting Main MCP server...")
     try:

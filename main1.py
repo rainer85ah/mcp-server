@@ -1,17 +1,15 @@
 import asyncio
 import logging
-
 from fastapi import FastAPI
 from fastmcp import FastMCP
-from tools.general import *
-from dotenv import load_dotenv
+from agents.chat import chat_mcp
+from tools.chat import *
 
 
-load_dotenv()
 logger = logging.getLogger("MainAgent")
 
 mcp = FastMCP(name="MainAgent")
-mcp.mount(prefix='general', server=general_mcp)
+mcp.mount(prefix='chat', server=chat_mcp)
 mcp.dependencies = []
 mcp_app = mcp.http_app(path='/mcp')
 app = FastAPI(title="MainAgent API")
