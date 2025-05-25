@@ -1,4 +1,4 @@
-from agents.server import mcp
+from server import mcp
 
 
 @mcp.resource("config://app")

@@ -1,15 +1,78 @@
-# Python-generated files
+# Byte-compiled / optimized / DLL files
 __pycache__/
-*.py[oc]
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Virtual environments (uv or others)
+.venv/
+venv/
+env/
+
+# uv
+uv.lock
+.uv/
+
+# PyCharm
+.idea/
+
+# Distribution / packaging
 build/
 dist/
-wheels/
-*.egg-info
+*.egg-info/
+.eggs/
+*.egg
 
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
 
-# Virtual environments
-.idea
-.venv
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
 
-# Secrets and passwords
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# mypy
+.mypy_cache/
+.dmypy.json
+
+# dotenv
 .env
+.env.*
+
+# Docker
+*.log
+docker-compose.override.yml
+docker-compose.*.yml
+Dockerfile.*
+.docker/
+
+# VSCode
+.vscode/
+
+# OS-specific
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# SQLite or other local dev files
+*.sqlite3
+*.db
+*.pid
