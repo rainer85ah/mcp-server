@@ -21,7 +21,7 @@ async def main():
         print(f"Available prompts: {prompts}")
 
         try:
-            result = await client.call_tool(name="general_ask_question_tool", arguments={"question": "Why is the sky blue?"})
+            result = await client.call_tool(name="chat_ask_question_tool", arguments={"question": "Why is the sky blue?"})
             print("Inference result:", result[0].text)
         except ClientError as e:
             print(f"Tool call failed: {e}")

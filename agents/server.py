@@ -2,28 +2,16 @@ from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from os import getenv
 from typing import Literal, cast
-from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastmcp import FastMCP
-from agents.chat import dynamic_mcp
+from agents.chat import chat_mcp
 from api.v1.chat import router
 from context.context import AppContext
 
 
-load_dotenv()
-
-
-@asynccontextmanager
-async def lifespan(server: FastMCP) -> AsyncIterator[AppContext]:
-    try:
-        yield AppContext()
-    finally:
-        pass
-
-
 # Mount subserver (synchronous operation)
 main_mcp = FastMCP(name="MainMCPServer")
-main_mcp.mount("items", dynamic_mcp)
+main_mcp.mount("chat", chat_mcp)
 
 app = FastAPI(name="MCP API")
 app.include_router(router, tags=["items"])

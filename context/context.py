@@ -11,8 +11,14 @@ class RequestContext:
 
 @dataclass
 class AppContext(Context):
-    pass
-    # sql_db: Database
+    def __init__(self):
+        """
+        self.pg_db = db.init_postgres()
+        self.mongo = db.init_mongo()
+        self.redis = cache.init_redis()
+        self.data_dir = filesystem.get_data_dir()
+        """
+        pass
 
 
 class LifespanContext:

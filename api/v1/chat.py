@@ -49,12 +49,6 @@ async def generate_text(topic: str = Query(..., min_length=1), model: Optional[s
     return await generate_text_tool(topic, model)
 
 
-@router.get("/generate-code", response_model=ChatResponse, summary="Generate Python code for a task")
-@safe_call
-async def generate_code(task: str = Query(..., min_length=1), model: Optional[str] = DEFAULT_MODEL):
-    return await generate_code_tool(task, model)
-
-
 @router.get("/summarize", response_model=ChatResponse, summary="Summarize text")
 @safe_call
 async def summarize(text: str = Query(..., min_length=1), model: Optional[str] = DEFAULT_MODEL):

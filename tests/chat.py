@@ -1,7 +1,7 @@
 import pytest
 import pytest_asyncio
 from fastmcp.client import Client
-from agents.chat import general_mcp
+from agents.chat import chat_mcp
 from main import logger
 
 pytestmark = pytest.mark.asyncio
@@ -23,10 +23,10 @@ tool_tests = [
 # --- Shared client fixture ---
 @pytest_asyncio.fixture
 async def mock_client():
-    tools = await general_mcp.get_tools()
+    tools = await chat_mcp.get_tools()
     logger.info(f"Available tools: {list(tools.keys())}")
 
-    async with Client(general_mcp) as client:
+    async with Client(chat_mcp) as client:
         yield client
 
 # --- Parameterized test ---
