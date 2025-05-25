@@ -1,5 +1,6 @@
 import logging
 from tools.code import *
+from agents.code import code_mcp
 from models.types import CodePrompt, CodeInput
 from fastapi import APIRouter, HTTPException
 
@@ -18,6 +19,11 @@ def safe_call(fn):
     return wrapper
 
 
+
+@router.get("/")
+async def get_tools():
+    response = await code_mcp.get_tools()
+    return {"status": response.__str__()}
 
 @router.post("/generate")
 @safe_call

@@ -10,4 +10,4 @@ RUN uv venv && uv pip install --system .
 EXPOSE 8000
 ENV ENV=production
 
-CMD ["python", "main.py"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

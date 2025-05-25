@@ -1,4 +1,3 @@
-from fastapi import FastAPI
 from fastmcp import FastMCP
 
 
@@ -8,5 +7,3 @@ chat_mcp = FastMCP(
     stateless_http=True,
     dependencies=[],
 )
-
-chat_api = FastAPI(name="ChatAPI")

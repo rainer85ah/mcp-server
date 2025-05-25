@@ -1,4 +1,3 @@
-from fastapi import FastAPI
 from fastmcp import FastMCP
 
 
@@ -8,5 +7,3 @@ code_mcp = FastMCP(
     stateless_http=True,
     dependencies=[]
 )
-
-code_api = FastAPI(name="CodeAPI")

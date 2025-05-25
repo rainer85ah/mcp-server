@@ -1,4 +1,5 @@
 import logging
+from agents.chat import chat_mcp
 from tools.chat import *
 from typing import Optional
 from models.types import ChatResponse
@@ -18,6 +19,11 @@ def safe_call(fn):
             raise HTTPException(status_code=500, detail="Chat tool failed")
     return wrapper
 
+
+@router.get("/")
+async def get_tools():
+    response = await chat_mcp.get_tools()
+    return {"status": response.__str__()}
 
 @router.get("/ask", response_model=ChatResponse, summary="Ask LLM a question")
 @safe_call
