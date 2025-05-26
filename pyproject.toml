@@ -1,21 +1,26 @@
-[project]
-name = "mcp-server"
-version = "0.1.0"
-description = "Add your description here"
-readme = "README.md"
-requires-python = ">=3.12"
-dependencies = [
-    "fastmcp>=2.3.4",
-    "httpx>=0.28.1",
-    "mcp[cli]>=1.9.0",
-    "mcpo>=0.0.14",
-    "pytest>=8.3.5",
-    "pytest-asyncio>=0.26.0",
-]
-
 [build-system]
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "mcp-server"
+version = "0.1.0"
+description = "MCP Server using FastMCP, and FastAPI."
+authors = [{ name = "Rainer Arencibia", email = "rainer85ah@gmail.com" }]
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.115.12",
+    "fastmcp>=2.3.4",
+    "httpx>=0.28.1",
+    "mcp[cli]>=1.9.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3.5",
+    "pytest-asyncio>=0.26.0",
+]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"

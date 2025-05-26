@@ -21,7 +21,7 @@ def safe_call(fn):
 
 
 @router.get("/")
-async def get_tools():
+async def get_coding_tools():
     response = await code_mcp.get_tools()
     return {"status": response.__str__()}
 

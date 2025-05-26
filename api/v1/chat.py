@@ -20,7 +20,7 @@ def safe_call(fn):
 
 
 @router.get("/")
-async def get_tools():
+async def get_chat_tools():
     response = await chat_mcp.get_tools()
     return {"status": response.__str__()}
 
