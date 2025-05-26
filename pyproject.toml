@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "fastmcp>=2.3.4",
+    "httpx>=0.28.1",
     "mcp[cli]>=1.9.0",
     "mcpo>=0.0.14",
     "pytest>=8.3.5",
@@ -15,3 +16,6 @@ dependencies = [
 [build-system]
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"

@@ -1,3 +1,6 @@
+"""
+This file (server.py) is used for testing new changes to the main.py file and as a backup.
+"""
 import asyncio
 import logging
 from fastapi import FastAPI
@@ -10,7 +13,10 @@ from tools.chat import *
 from tools.code import *
 
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
 logger = logging.getLogger("MainAgent")
 
 
@@ -26,12 +32,8 @@ logger.info(f"chat_mcp: {chat_mcp}")
 mcp.mount(prefix='chat', server=chat_mcp)
 logger.info(f"code_mcp: {code_mcp}")
 mcp.mount(prefix='code', server=code_mcp)
-
-# Mount the MCP as a sub-application
-# this is the FastAPI `app` inside FastMCP
 mcp_app = mcp.http_app(path='/mcp')
 
-# Create a FastAPI app and mount the MCP server
 app = FastAPI(title="MCP API", lifespan=mcp_app.router.lifespan_context)
 app.mount("/service", mcp_app, name="main")
 app.include_router(chat_router, prefix="/api/v1")

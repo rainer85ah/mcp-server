@@ -1,5 +1,4 @@
 import logging
-from agents.chat import chat_mcp
 from tools.chat import *
 from typing import Optional
 from models.types import ChatResponse
@@ -27,7 +26,10 @@ async def get_tools():
 
 @router.get("/ask", response_model=ChatResponse, summary="Ask LLM a question")
 @safe_call
-async def ask_question(question: str = Query(..., min_length=1), model: Optional[str] = DEFAULT_MODEL):
+async def ask_question(
+        question: Optional[str] = "",
+        model: Optional[str] = DEFAULT_MODEL
+):
     return await ask_question_tool(question, model)
 
 

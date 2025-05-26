@@ -8,7 +8,7 @@ from agents.code import code_mcp
 from tools.chat import *
 from tools.code import *
 
-# Structured, production-ready logging
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"

@@ -326,6 +326,7 @@ version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "fastmcp" },
+    { name = "httpx" },
     { name = "mcp", extra = ["cli"] },
     { name = "mcpo" },
     { name = "pytest" },
@@ -335,6 +336,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "fastmcp", specifier = ">=2.3.4" },
+    { name = "httpx", specifier = ">=0.28.1" },
     { name = "mcp", extras = ["cli"], specifier = ">=1.9.0" },
     { name = "mcpo", specifier = ">=0.0.14" },
     { name = "pytest", specifier = ">=8.3.5" },

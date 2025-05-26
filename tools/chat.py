@@ -44,7 +44,6 @@ async def complete_text_tool(text: str, model: str = DEFAULT_MODEL) -> str:
 @chat_mcp.tool()
 async def generate_text_tool(topic: str, model: str = DEFAULT_MODEL) -> str:
     """AI model text generation"""
-
     chunks = []
     async for chunk in call_ollama(f"Write a paragraph about:\n{topic}", model):
         chunks.append(chunk)
@@ -54,7 +53,6 @@ async def generate_text_tool(topic: str, model: str = DEFAULT_MODEL) -> str:
 @chat_mcp.tool()
 async def summarize_tool(text: str, model: str = DEFAULT_MODEL) -> str:
     """AI model summarization"""
-
     chunks = []
     async for chunk in call_ollama(f"Summarize the following text:\n{text}", model):
         chunks.append(chunk)
