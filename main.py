@@ -7,6 +7,7 @@ from agents.chat import chat_mcp
 from agents.code import code_mcp
 from tools.chat import *
 from tools.code import *
+from fastapi.middleware.cors import CORSMiddleware
 
 
 logging.basicConfig(
@@ -31,6 +32,13 @@ app = FastAPI(title="MCP API", lifespan=mcp_app.router.lifespan_context)
 app.mount("/service", mcp_app, name="main")
 app.include_router(chat_router, prefix="/api/v1")
 app.include_router(code_router, prefix="/api/v1")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Or restrict to specific domains
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 async def home():
