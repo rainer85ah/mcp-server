@@ -37,9 +37,7 @@ services:
         max-file: "3"
 
   mcp:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ghcr.io/rainer85ah/mcp-server:latest
     container_name: mcp
     depends_on:
       - ollama
