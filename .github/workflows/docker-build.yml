@@ -50,8 +50,9 @@ jobs:
       - name: Make image public
         run: |
           gh api --method PATCH /user/packages/container/${{ github.repository_owner }}/$(basename ${{ github.repository }})/visibility \
-            -f visibility=public \
-            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}"
+            -f visibility=public
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Logout from GHCR
         run: docker logout ghcr.io
