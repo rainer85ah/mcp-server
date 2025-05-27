@@ -37,6 +37,7 @@ jobs:
           tags: |
             type=ref,event=branch
             type=sha
+            type=raw,value=latest,enable={{is_default_branch}}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
@@ -48,11 +49,9 @@ jobs:
 
       - name: Make image public
         run: |
-          echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
           gh api --method PATCH /user/packages/container/${{ github.repository_owner }}/$(basename ${{ github.repository }})/visibility \
-            -f visibility=public
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            -f visibility=public \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}"
 
       - name: Logout from GHCR
         run: docker logout ghcr.io
