@@ -1,71 +1,49 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Python](https://img.shields.io/badge/Python-3.12%2B-blue.svg)](https://www.python.org/)
-[![Docker](https://img.shields.io/badge/Docker-Ready-blue)](https://www.docker.com/)
 
 
-# 🚀 FastMCP Boilerplate
+# 🚀 Terraform - Manage AWS ECS
 
-A modern **MCP (Model Control Plane)** project built with **Python**, **FastMCP**, **FastAPI**, **Docker**, and integrated with **Ollama** and **Open-webUI**.
-
-This project provides a lightweight, extensible foundation for building and deploying intelligent systems that manage and expose AI/LLM capabilities.
-
----
-
-## 🔧 Tech Stack
-
-- 🐍 **Python** – Primary language
-- ⚡ **FastMCP** – Model Control Plane framework for managing AI models
-- 🌐 **FastAPI** – High-performance API backend
-- 🧠 **Ollama** – LLM execution and orchestration
-- 🧩 **Open-webUI** – Chat-style interface for AI interactions
-- 🐳 **Docker** – Containerized for easy deployment and reproducibility in dev and production environments.
+This repository contains the Terraform configuration to provision and manage the AWS infrastructure for the **MCP Service**. The infrastructure is designed to support multiple environments (development, staging, UAT, and production) using AWS ECS (Elastic Container Service) with Fargate, along with networking and security components.
 
 ---
 
 ## 🧱 Features
 
-- 🚀 Fast startup with Docker
-- 🔌 Easy integration with Ollama and Open-webUI
-- 📦 Pluggable architecture for adding models and routes
-- 🎯 Designed for rapid prototyping or production use
-- ✅ REST API ready with OpenAPI docs
+- Modular design separating **networking** and **ECS service** components.
+- Multi-environment support: `dev`, `uat`, `stag`, and `prod`.
+- VPC with public and private subnets, security groups, and ALB (Application Load Balancer).
+- ECS Cluster and Fargate service deployment with task definitions.
+- Dynamic image tagging to match environment branches or commit SHAs for traceability.
+- Secure handling of IAM roles and permissions.
 
 ---
 
-## 📦 Getting Started
+## Prerequisites
 
-### 1. Clone the repo
+- Terraform v1.5.0 or later
+- AWS CLI configured with appropriate credentials
+- AWS account with permissions to create VPCs, ECS clusters, ALBs, IAM roles, etc.
+- Docker images built and pushed to GHCR (GitHub Container Registry)
+- Variables files (`terraform.tfvars`) per environment with appropriate values
 
-```bash
-git clone https://github.com/rainer85ah/mcp-server.git
-cd mcp-server
-```
-
-### 🐳 2. Run with Docker Compose (recommended)
-
-```bash
-docker compose up --build
-```
-
-### 3. Access the app
+## 📦 Getting Started with workspace:
 
 ```bash
 
-Ollama: http://localhost:11434
-API Docs: http://localhost:8000/docs
-OpenAPI: http://localhost:8000/openapi.json
-MCP Server: http://localhost:8000/service/mcp/
-Open-webUI: http://localhost:3000
+terraform init
+terraform workspace new prod
+terraform plan -var-file="prod.tfvars"
+terraform apply -var-file="envs/prod.tfvars"
 ```
 
-## 🌱 Use as a Boilerplate
+## 🚀 How to Deploy Per Env
 
-Use this project as a starter template for:
+```bash
 
-- **AI chat platforms**
-- **Model routing gateways**
-- **Developer LLM sandboxes**
-- **FastAPI-based ML backends**   
+terraform init
+terraform plan -var-file="environments/dev.tfvars"
+terraform apply -var-file="environments/dev.tfvars"
+```
 
 
 ## 📜 License
@@ -73,16 +51,6 @@ Use this project as a starter template for:
 
 This project is licensed under the [MIT License](https://opensource.org/license/mit).  
 You are free to use, modify, and distribute this software with proper attribution.
-
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to:
-
-- **⭐ Star the project**
-- **🍴 Fork the repo**
-- **🛠️ Open issues or feature requests**
-- **🔁 Submit pull requests**    
 
 
 ## 📫 Contact
