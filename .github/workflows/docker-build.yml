@@ -47,12 +47,5 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-      - name: Make image public
-        run: |
-          gh api --method PATCH /user/packages/container/${{ github.repository_owner }}/$(basename ${{ github.repository }})/visibility \
-            -f visibility=public
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Logout from GHCR
         run: docker logout ghcr.io
