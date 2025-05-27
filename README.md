@@ -50,8 +50,11 @@ docker compose up --build
 ### 3. Access the app
 
 ```bash
+
 Ollama: http://localhost:11434
 API Docs: http://localhost:8000/docs
+OpenAPI: http://localhost:8000/openapi.json
+MCP Server: http://localhost:8000/service/mcp/
 Open-webUI: http://localhost:3000
 ```
 
