@@ -57,3 +57,4 @@ services:
 networks:
   ai-net:
     driver: bridge
+    enable_ipv6: false
