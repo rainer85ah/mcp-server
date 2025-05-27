@@ -47,5 +47,12 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
+      - name: Make image public
+        run: |
+          gh api --method PATCH /users/${{ github.repository_owner }}/packages/container/mcp-server/visibility \
+            -f visibility=public
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Logout from GHCR
         run: docker logout ghcr.io
