@@ -1,0 +1,47 @@
+name: Deploy to Docker Swarm
+
+on:
+  push:
+    branches: [main, uat, stag]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        environment: [uat, stag, prod]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Determine image tag
+        id: tag
+        run: |
+          if [[ "${GITHUB_REF_NAME}" == "main" ]]; then
+            echo "tag=latest" >> $GITHUB_OUTPUT
+          else
+            echo "tag=${GITHUB_REF_NAME}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Set up SSH agent
+        uses: webfactory/ssh-agent@v0.7.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Deploy to Swarm
+        env:
+          DOCKER_IMAGE: ghcr.io/${{ github.repository }}:${{ steps.tag.outputs.tag }}
+          SWARM_MANAGER: ${{ secrets.SWARM_MANAGER_HOST }}
+          SWARM_USER: ${{ secrets.SSH_USER }}
+          STACK_NAME: my_stack_${{ matrix.environment }}
+        run: |
+          ssh -o StrictHostKeyChecking=no $SWARM_USER@$SWARM_MANAGER << EOF
+            echo "Pulling image $DOCKER_IMAGE"
+            docker pull $DOCKER_IMAGE
+
+            echo "Deploying stack $STACK_NAME with updated image"
+            docker service update --image $DOCKER_IMAGE ${STACK_NAME}_my_service || \
+            docker stack deploy -c docker-compose.yml $STACK_NAME
+          EOF

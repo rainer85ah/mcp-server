@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - 'v*.*.*'
+  workflow_dispatch:
 
 jobs:
   release:
@@ -15,13 +16,4 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          generate_release_notes: true
-
-      - name: Push Docker image with tag
-        run: |
-          TAG=${GITHUB_REF##*/}
-          docker pull ghcr.io/your-org/mcp-server:main
-          docker tag ghcr.io/your-org/mcp-server:main ghcr.io/your-org/mcp-server:$TAG
-          docker push ghcr.io/your-org/mcp-server:$TAG
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          tag_name: ${{ github.ref_name }}

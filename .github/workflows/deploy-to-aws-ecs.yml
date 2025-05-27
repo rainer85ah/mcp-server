@@ -1,0 +1,55 @@
+name: Deploy to AWS ECS
+
+on:
+  push:
+    branches: [main, uat, stag]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        environment: [uat, stag, prod]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Deploy to ECS
+        if: (matrix.environment == 'prod' && github.ref_name == 'main') || (matrix.environment == github.ref_name)
+        env:
+          CLUSTER_NAME: my-cluster-${{ matrix.environment }}
+          SERVICE_NAME: my-service-${{ matrix.environment }}
+          CONTAINER_NAME: mcp-server
+          IMAGE_URI: ghcr.io/${{ github.repository }}:${{ steps.tag.outputs.tag }}
+        run: |
+          echo "Registering new task definition with image: $IMAGE_URI"
+          
+          # Get current task definition
+          TASK_DEF_ARN=$(aws ecs describe-services --cluster $CLUSTER_NAME --services $SERVICE_NAME --query "services[0].taskDefinition" --output text)
+          
+          # Get task definition JSON and modify image
+          aws ecs describe-task-definition --task-definition $TASK_DEF_ARN > taskdef.json
+          jq --arg IMAGE "$IMAGE_URI" '.taskDefinition.containerDefinitions[0].image = $IMAGE | {family: .taskDefinition.family, containerDefinitions: .taskDefinition.containerDefinitions, volumes: .taskDefinition.volumes, taskRoleArn: .taskDefinition.taskRoleArn, executionRoleArn: .taskDefinition.executionRoleArn, networkMode: .taskDefinition.networkMode, requiresCompatibilities: .taskDefinition.requiresCompatibilities, cpu: .taskDefinition.cpu, memory: .taskDefinition.memory}' taskdef.json > new-taskdef.json
+          
+          # Register new task definition revision
+          NEW_TASK_DEF_ARN=$(aws ecs register-task-definition --cli-input-json file://new-taskdef.json --query 'taskDefinition.taskDefinitionArn' --output text)
+          echo "Registered new task definition: $NEW_TASK_DEF_ARN"
+          
+          # Update ECS service to use new task definition
+          aws ecs update-service --cluster $CLUSTER_NAME --service $SERVICE_NAME --task-definition $NEW_TASK_DEF_ARN --force-new-deployment
+          echo "ECS service updated, deployment started."

@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - "infra/**"
+  workflow_dispatch:
 
 jobs:
   terraform:
