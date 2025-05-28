@@ -1,4 +1,4 @@
-import logging
+
 from fastapi import FastAPI
 from fastmcp import FastMCP
 from api.v1.chat import router as chat_router
@@ -10,14 +10,10 @@ from tools.code import *
 from prompts.chat import *
 from prompts.coding import *
 from fastapi.middleware.cors import CORSMiddleware
+from utils.logger_config import configure_logger
 
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-)
-logger = logging.getLogger("MainAgent")
-
+logger = configure_logger("MainAgent")
 logger.info("Starting Main MCP server ...")
 mcp = FastMCP(
     name="MainAgent",
