@@ -23,25 +23,25 @@ class RedisDB(BaseDB):
             await self.client.close()
             logger.info("Redis connection closed")
 
-    db_retry()
+    @db_retry()
     async def read(self, filter_query: Dict[str, Any], **kwargs) -> List[Dict[str, Any]]:
         await self.connect()
         key = filter_query.get("key")
         value = await self.client.get(key)
         return [{"key": key, "value": value.decode() if value else None}]
 
-    db_retry()
+    @db_retry()
     async def write(self, document: Dict[str, Any], **kwargs) -> None:
         await self.connect()
         await self.client.set(document["key"], document["value"])
 
-    db_retry()
+    @db_retry()
     async def update(self, filter_query: Dict[str, Any], update_doc: Dict[str, Any], upsert: bool = False) -> int:
         await self.connect()
         await self.client.set(filter_query["key"], update_doc["value"])
         return 1
 
-    db_retry()
+    @db_retry()
     async def delete(self, filter_query: Dict[str, Any]) -> int:
         await self.connect()
         return await self.client.delete(filter_query["key"])

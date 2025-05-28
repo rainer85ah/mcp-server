@@ -10,7 +10,7 @@ logger = configure_logger("HTTPFetcher")
 
 class WebsiteFetcher(BaseFetcher):
 
-    http_retry()
+    @http_retry()
     async def fetch(self, url: str, params: dict = None) -> dict:
         async with httpx.AsyncClient() as client:
             try:

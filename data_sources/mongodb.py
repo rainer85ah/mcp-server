@@ -33,24 +33,24 @@ class MongoDB(BaseDB):
             self.client.close()
             logger.info("MongoDB connection closed")
 
-    db_retry()
+    @db_retry()
     async def read(self, filter_query: Dict[str, Any], **kwargs) -> List[Dict[str, Any]]:
         await self.connect()
         cursor = self.collection.find(filter_query, **kwargs)
         return [doc async for doc in cursor]
 
-    db_retry()
+    @db_retry()
     async def write(self, document: Dict[str, Any], **kwargs) -> None:
         await self.connect()
         await self.collection.insert_one(document, **kwargs)
 
-    db_retry()
+    @db_retry()
     async def update(self, filter_query: Dict[str, Any], update_doc: Dict[str, Any], upsert: bool = False) -> int:
         await self.connect()
         result = await self.collection.update_many(filter_query, {"$set": update_doc}, upsert=upsert)
         return result.modified_count
 
-    db_retry()
+    @db_retry()
     async def delete(self, filter_query: Dict[str, Any]) -> int:
         await self.connect()
         result = await self.collection.delete_many(filter_query)
