@@ -1,4 +1,3 @@
-
 from fastapi import FastAPI
 from fastmcp import FastMCP
 from api.v1.chat import router as chat_router
