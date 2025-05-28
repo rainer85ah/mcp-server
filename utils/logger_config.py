@@ -24,8 +24,12 @@ def configure_logger(name: str = "MainAgent", log_file: str = "server.log"):
     ch.setFormatter(formatter)
     logger.addHandler(ch)
 
+    # Save log file in same directory as this module
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    log_file_path = os.path.join(current_dir, log_file)
+
     # File handler
-    fh = logging.FileHandler(log_file)
+    fh = logging.FileHandler(log_file_path)
     fh.setLevel("INFO")
     fh.setFormatter(formatter)
     logger.addHandler(fh)
