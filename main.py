@@ -7,6 +7,8 @@ from agents.chat import chat_mcp
 from agents.code import code_mcp
 from tools.chat import *
 from tools.code import *
+from prompts.chat import *
+from prompts.coding import *
 from fastapi.middleware.cors import CORSMiddleware
 
 
