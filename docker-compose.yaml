@@ -1,14 +1,18 @@
 services:
 
   ollama:
-    image: ollama/ollama:latest
+    image: ollama/ollama:latest  # alpine/ollama:latest
     container_name: ollama
     ports:
       - "11434:11434"
     volumes:
-      - ${HOME}/ollama:/root/.ollama
+      - ${MODELS_LOCATION}:/root/.ollama
     networks:
       - ai-net
+    environment:
+      OLLAMA_NUM_THREADS: "20"
+    cap_add:
+      - IPC_LOCK
     logging:
       driver: "json-file"
       options:
