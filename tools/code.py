@@ -10,6 +10,7 @@ DEFAULT_MODEL = getenv("DEFAULT_MODEL", "llama3.2:1b-instruct-q4_K_M")
 
 
 @code_mcp.tool(
+
     name="analyze_structure",
     description="Analyze the structure of a repository to count files and make structure suggestions."
 )
@@ -29,7 +30,7 @@ def analyze_structure(
         return {"error": "Failed to analyze structure."}
 
 @code_mcp.tool(
-    name="generate_code_tool",
+    name="generate_code",
     description="Generate source code in the specified language based on a prompt."
 )
 async def generate_code_tool(

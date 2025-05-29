@@ -1,79 +1,116 @@
-import logging
-from tools.code import *
-from agents.code import code_mcp
+from fastapi import APIRouter, HTTPException, Depends
 from models.types import CodePrompt, CodeInput
-from fastapi import APIRouter, HTTPException
+from agents.code import code_mcp
+import logging
+from typing import Callable, Awaitable, TypeVar, Any, Coroutine
+from tools.code import (
+    generate_code_tool, fix_code_tool, explain_code_tool,
+    write_tests_tool, debug_code_tool, generate_function_docstring_tool
+)
 
-
-router = APIRouter(prefix="/code", tags=["Coding endpoints"])
 logger = logging.getLogger(__name__)
+router = APIRouter(
+    prefix="/code",
+    tags=["Code Tools"],
+    responses={500: {"description": "Internal Server Error"}}
+)
+
+R = TypeVar("R")
 
 
-def safe_call(fn):
-    async def wrapper(*args, **kwargs):
+def async_wrapper(fn: Callable[..., Coroutine[Any, Any, R]]) -> Callable[..., Coroutine[Any, Any, dict]]:
+    """
+    A decorator to wrap async functions with error handling and unified response format.
+    """
+    async def wrapper(*args, **kwargs) -> dict:
         try:
-            return {"result": await fn(*args, **kwargs)}
+            result = await fn(*args, **kwargs)
+            return {"result": result}
         except Exception as e:
-            logger.exception(f"Code tool error in {fn.__name__}: {e}")
-            raise HTTPException(status_code=500, detail="Code tool failed")
+            logger.exception(f"[{fn.__name__}] Tool error: {e}")
+            raise HTTPException(status_code=500, detail="Tool failed. See logs.")
     return wrapper
 
 
+@router.get(
+    "/",
+    summary="List available coding tools",
+    description="Returns the list of available AI-powered coding tools.",
+    response_description="A dictionary listing the available code tools."
+)
+async def list_code_tools():
+    tools = await code_mcp.get_tools()
+    return {"tools": str(tools)}
 
-@router.get("/")
-async def get_coding_tools():
-    response = await code_mcp.get_tools()
-    return {"status": response.__str__()}
 
-@router.post("/generate")
-@safe_call
+@router.post(
+    "/generate",
+    summary="Generate code from a prompt",
+    description="Generates code based on a natural language prompt, optional programming language, and model.",
+    response_model=dict,
+    response_description="The generated source code."
+)
+@async_wrapper
 async def generate_code(payload: CodePrompt):
-    try:
-        return {"result": await generate_code_tool(prompt=payload.prompt, language=payload.language, model=payload.model)}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    return await generate_code_tool(prompt=payload.prompt, language=payload.language, model=payload.model)
 
 
-@router.post("/fix")
-@safe_call
+@router.post(
+    "/fix",
+    summary="Fix or refactor code",
+    description="Refactors or fixes provided code using an AI model.",
+    response_model=dict,
+    response_description="The refactored or fixed code."
+)
+@async_wrapper
 async def fix_code(payload: CodeInput):
-    try:
-        return {"result": await fix_code_tool(code=payload.code, model=payload.model)}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    return await fix_code_tool(code=payload.code, model=payload.model)
 
 
-@router.post("/explain")
-@safe_call
+@router.post(
+    "/explain",
+    summary="Explain code logic",
+    description="Provides a human-readable explanation of what the code does.",
+    response_model=dict,
+    response_description="Explanation of the code's behavior."
+)
+@async_wrapper
 async def explain_code(payload: CodeInput):
-    try:
-        return {"result": await explain_code_tool(code=payload.code, model=payload.model)}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    return await explain_code_tool(code=payload.code, model=payload.model)
 
 
-@router.post("/test")
-@safe_call
+@router.post(
+    "/test",
+    summary="Generate tests for code",
+    description="Creates unit tests for the given source code using AI.",
+    response_model=dict,
+    response_description="The generated test code."
+)
+@async_wrapper
 async def write_tests(payload: CodeInput):
-    try:
-        return {"result": await write_tests_tool(code=payload.code, language=payload.language, model=payload.model)}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    return await write_tests_tool(code=payload.code, language=payload.language, model=payload.model)
 
 
-@router.post("/debug")
-@safe_call
+@router.post(
+    "/debug",
+    summary="Debug code",
+    description="Analyzes code for bugs and returns potential fixes.",
+    response_model=dict,
+    response_description="Debug suggestions or fixes for the code."
+)
+@async_wrapper
 async def debug_code(payload: CodeInput):
-    try:
-        return {"result": await debug_code_tool(code=payload.code, model=payload.model)}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    return await debug_code_tool(code=payload.code, model=payload.model)
 
 
-@router.post("/docstring")
-@safe_call
+@router.post(
+    "/docstring",
+    summary="Generate docstring for a function",
+    description="Generates a descriptive docstring for a given Python function.",
+    response_model=dict,
+    response_description="The generated docstring."
+)
+@async_wrapper
 async def generate_docstring(payload: CodeInput):
-    try:
-        return {"result": await generate_function_docstring_tool(code=payload.code, model=payload.model)}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    return await generate_function_docstring_tool(code=payload.code, model=payload.model)
+
