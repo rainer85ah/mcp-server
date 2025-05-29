@@ -1,6 +1,6 @@
+from data_sources.mongodb import MongoDB
+from data_sources.postgres import PostgresDB
 from main import mcp
-from data_sources import MongoDB
-from data_sources import PostgresDB
 from data_sources.redis import RedisDB
 from utils.logger_config import configure_logger
 

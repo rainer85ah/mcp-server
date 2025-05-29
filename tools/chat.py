@@ -1,5 +1,6 @@
 import logging
 from os import getenv
+from fastmcp import Context
 from agents.chat import chat_mcp
 from tools.utils import call_ollama
 from typing import Annotated
@@ -16,7 +17,7 @@ DEFAULT_MODEL = getenv("DEFAULT_MODEL", "llama3.2:1b-instruct-q4_K_M")
 )
 async def ask_question_tool(
         question: Annotated[str, "The natural language question to answer."],
-        model: Annotated[str, "LLM model to use."] = DEFAULT_MODEL
+        model: Annotated[str, "LLM model to use."] = DEFAULT_MODEL,
 ) -> str:
     try:
         chunks = []

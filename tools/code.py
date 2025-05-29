@@ -1,5 +1,6 @@
 import logging
 from os import getenv
+from fastmcp import Context
 from agents.code import code_mcp
 from tools.utils import call_ollama
 from typing import Annotated
@@ -136,7 +137,8 @@ async def debug_code_tool(
 )
 async def generate_function_docstring_tool(
         code: Annotated[str, "Function code to document."],
-        model: Annotated[str, "LLM model to use."] = DEFAULT_MODEL
+        model: Annotated[str, "LLM model to use."] = DEFAULT_MODEL,
+        ctx: Context = None
 ) -> str:
     try:
         prompt = f"Write a clear docstring for this function:\n\n{code}"
