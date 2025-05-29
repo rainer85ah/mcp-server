@@ -1,10 +1,11 @@
 import os
 import traceback
+from contextlib import asynccontextmanager
 from data_sources.mongodb import MongoDB
 from data_sources.postgres import PostgresDB
 from data_sources.redis import RedisDB
-from main import mcp
 from utils.logger_config import configure_logger
+
 
 logger = configure_logger("Lifespan Context")
 
@@ -64,13 +65,3 @@ class LifespanContext:
         except Exception as e:
             logger.warning(f"⚠️ Redis disconnection failed: {e}\n{traceback.format_exc()}")
 
-
-lifespan = LifespanContext()
-
-@mcp.on_startup()
-async def on_start():
-    await lifespan.startup()
-
-@mcp.on_shutdown()
-async def on_shutdown():
-    await lifespan.shutdown()

@@ -1,12 +1,19 @@
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastmcp import FastMCP
 from api.v1.chat import router as chat_router
 from api.v1.code import router as code_router
 from agents.chat import chat_mcp
 from agents.code import code_mcp
+from context.lifespan_context import LifespanContext
 from tools.chat import *
 from tools.code import *
 from prompts.chat import *
+from resources.chat import *
+from resources.chat_templates import *
+from resources.code import *
+from resources.code_templates import *
 from prompts.coding import *
 from fastapi.middleware.cors import CORSMiddleware
 from utils.logger_config import configure_logger
@@ -14,12 +21,25 @@ from utils.logger_config import configure_logger
 
 logger = configure_logger("MainAgent")
 logger.info("Starting Main MCP server ...")
+
+@asynccontextmanager
+async def lifespan_context(app):
+    lifespan = LifespanContext()
+    await lifespan.startup()
+    app.state.lifespan = lifespan
+
+    try:
+        yield
+    finally:
+        await lifespan.shutdown()
+
 mcp = FastMCP(
     name="MainAgent",
     instructions="Coordinator for sub-agents.",
     dependencies=[],
 )
 
+mcp.lifespan_context = lifespan_context
 logger.info("Mounting Sub-Agents ...")
 mcp.mount(prefix='chat', server=chat_mcp)
 mcp.mount(prefix='code', server=code_mcp)

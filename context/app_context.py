@@ -47,7 +47,7 @@ def create_app_context() -> AppContext:
     return AppContext(
         api=HttpFetcher(),
         scraper=WebsiteFetcher(),
-        local_fs=LocalStorage(base_path=os.environ.get("LOCAL_BASE_PATH", "/data")),
+        local_fs=LocalStorage(base_path=environ.get("LOCAL_BASE_PATH", "/data")),
         s3=S3Storage(
             bucket_name=environ.get("S3_BUCKET", "my-bucket"),
             region=environ.get("S3_REGION", "us-east-1")
