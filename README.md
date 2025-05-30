@@ -14,7 +14,7 @@ This project provides a lightweight, extensible foundation for building and depl
 ## 🔧 Tech Stack
 
 - 🐍 **Python** – Primary language
-- ⚡ **FastMCP** – Model Control Plane framework for managing AI models
+- ⚡ **FastMCP** – Model Control Protocol framework for managing AI models
 - 🌐 **FastAPI** – High-performance API backend
 - 🧠 **Ollama** – LLM execution and orchestration
 - 🧩 **Open-webUI** – Chat-style interface for AI interactions
