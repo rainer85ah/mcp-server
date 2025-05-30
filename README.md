@@ -46,7 +46,7 @@ cd mcp-server
 
 ```bash
 
-docker compose up --build
+docker compose up --build -d
 ```
 
 ### 3. Access the app
