@@ -28,7 +28,7 @@ services:
     ports:
       - "3000:8080"
     volumes:
-      - ${HOME}/openweb:/app/backend/data
+      - ${OPENWEB_LOCATION}:/app/backend/data
     environment:
       - OLLAMA_BASE_URL=${OLLAMA_BASE_URL}
       - WEBUI_SECRET_KEY=${WEBUI_SECRET_KEY}

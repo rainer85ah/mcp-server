@@ -12,7 +12,6 @@ venv/
 env/
 
 # uv
-uv.lock
 .uv/
 
 # PyCharm

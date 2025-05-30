@@ -11,9 +11,17 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "fastapi>=0.115.12",
-    "fastmcp>=2.3.4",
+    "fastmcp>=2.5.2",
     "httpx>=0.28.1",
     "mcp[cli]>=1.9.0",
+    "motor>=3.4.0",
+    "boto3>=1.38.26",
+    "aiohttp>=3.12.4",
+    "asyncpg>=0.30.0",
+    "psycopg2-binary>=2.9.10",
+    "redis>=6.2.0",
+    "botocore>=1.38.26",
+    "tenacity>=9.1.2",
 ]
 
 [project.optional-dependencies]
