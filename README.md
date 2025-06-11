@@ -3,12 +3,13 @@
 [![Docker](https://img.shields.io/badge/Docker-Ready-blue)](https://www.docker.com/)
 
 
-# 🚀 FastMCP Boilerplate
+# 🚀 FastMCP Boilerplate for MCP Servers
 
-A modern **MCP (Model Control Plane)** project built with **Python**, **FastMCP**, **FastAPI**, **Docker**, and integrated with **Ollama** and **Open-webUI**.
+A modern **MCP (Model Control Protocol)** project built with **Python**, **FastMCP**, **FastAPI**, **Docker**, and integrated with **Ollama** and **Open-webUI**.
 
 This project provides a lightweight, extensible foundation for building and deploying intelligent systems that manage and expose AI/LLM capabilities.
 
+![Model Control Protocol (MCP)](utils/MCP.gif)
 ---
 
 ## 🔧 Tech Stack
